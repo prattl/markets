@@ -1,6 +1,20 @@
 module Main exposing (..)
 
-import Html exposing (Html, article, button, div, footer, header, main_, section, text)
+import Html
+    exposing
+        ( Html
+        , Attribute
+        , article
+        , button
+        , div
+        , footer
+        , header
+        , h1
+        , main_
+        , section
+        , text
+        )
+import Html.Attributes exposing (..)
 
 
 main : Program Never Model Msg
@@ -44,10 +58,21 @@ update msg model =
 -- VIEW
 
 
+headerStyle : Attribute msg
+headerStyle =
+    style
+        [ ( "borderBottom", "2px solid #DDD" )
+        , ( "height", "3rem" )
+        ]
+
+
+
+
 view : Model -> Html Msg
 view model =
     div []
-        [ main_ []
-            [ text "Hello"
-            ]
+        [ header [ headerStyle ]
+            [ h1 [] [ text "Find a Farmer's Market" ] ]
+        , main_ [] []
+        , footer [] []
         ]
