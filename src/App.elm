@@ -7,72 +7,98 @@ import Html
         , article
         , button
         , div
-        , footer
+        , form
         , header
+        , i
         , h1
         , main_
-        , section
+        , p
         , text
         )
-import Html.Attributes exposing (..)
-
-
-main : Program Never Model Msg
-main =
-    Html.beginnerProgram
-        { model = model
-        , view = view
-        , update = update
-        }
-
-
-
--- MODEL
+import Html.Attributes
+    exposing
+        ( class
+        , placeholder
+        , type_
+        )
+import Bulma.Modifiers exposing (..)
+import Bulma.Elements exposing (..)
+import Bulma.Form exposing (..)
+import Bulma.Layout exposing (..)
 
 
 type alias Model =
-    Int
+    {}
 
 
-model : Model
-model =
-    0
+main : Program Never Model msg
+main =
+    Html.beginnerProgram
+        { model = {}
+        , view = view
+        , update = \msg -> \model -> model
+        }
 
 
-
--- UPDATE
-
-
-type Msg
-    = NoOp
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        NoOp ->
-            model
-
-
-
--- VIEW
-
-
-headerStyle : Attribute msg
-headerStyle =
-    style
-        [ ( "borderBottom", "2px solid #DDD" )
-        , ( "height", "3rem" )
+marketsHero : Html msg
+marketsHero =
+    hero { heroModifiers | size = Small, color = Primary }
+        []
+        [ heroBody []
+            [ container []
+                [ title H1 [] [ text "Find a Farmer's Market" ]
+                , subtitle H2 [] [ text "Lorem Ipsum" ]
+                ]
+            ]
         ]
 
 
+searchInputModifiers : ControlInputModifiers msg
+searchInputModifiers =
+    { controlInputModifiers
+        | size = Large
+        , iconRight = Just ( Large, [], i [ class "fas fa-search" ] [] )
+    }
 
 
-view : Model -> Html Msg
+searchInput : Html msg
+searchInput =
+    let
+        searchControlAttrs : List (Attribute msg)
+        searchControlAttrs =
+            []
+
+        searchInputAttrs : List (Attribute msg)
+        searchInputAttrs =
+            [ placeholder "Zip code"
+            , type_ "search"
+            ]
+    in
+        controlInput
+            searchInputModifiers
+            searchControlAttrs
+            searchInputAttrs
+            []
+
+
+searchForm : Html msg
+searchForm =
+    form []
+        [ searchInput ]
+
+
+appContainer : Html msg
+appContainer =
+    section NotSpaced
+        []
+        [ container []
+            [ searchForm ]
+        ]
+
+
+view : Model -> Html msg
 view model =
-    div []
-        [ header [ headerStyle ]
-            [ h1 [] [ text "Find a Farmer's Market" ] ]
-        , main_ [] []
-        , footer [] []
+    main_ []
+        [ marketsHero
+        , appContainer
         ]
