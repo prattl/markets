@@ -1,20 +1,6 @@
 module Main exposing (..)
 
-import Html
-    exposing
-        ( Html
-        , Attribute
-        , article
-        , button
-        , div
-        , form
-        , header
-        , i
-        , h1
-        , main_
-        , p
-        , text
-        )
+import Html exposing (Html)
 import Html.Attributes
     exposing
         ( class
@@ -28,13 +14,13 @@ import Bulma.Layout exposing (..)
 
 
 type alias Model =
-    {}
+    { zip : String }
 
 
 main : Program Never Model msg
 main =
     Html.beginnerProgram
-        { model = {}
+        { model = { zip = "" }
         , view = view
         , update = \msg -> \model -> model
         }
@@ -46,44 +32,30 @@ marketsHero =
         []
         [ heroBody []
             [ container []
-                [ title H1 [] [ text "Find a Farmer's Market" ]
-                , subtitle H2 [] [ text "Lorem Ipsum" ]
+                [ title H1 [] [ Html.text "Find a Farmer's Market" ]
+                , subtitle H2 [] [ Html.text "Lorem Ipsum" ]
                 ]
             ]
         ]
 
 
-searchInputModifiers : ControlInputModifiers msg
-searchInputModifiers =
-    { controlInputModifiers
-        | size = Large
-        , iconRight = Just ( Large, [], i [ class "fas fa-search" ] [] )
-    }
-
-
 searchInput : Html msg
 searchInput =
-    let
-        searchControlAttrs : List (Attribute msg)
-        searchControlAttrs =
-            []
-
-        searchInputAttrs : List (Attribute msg)
-        searchInputAttrs =
-            [ placeholder "Zip code"
-            , type_ "search"
-            ]
-    in
-        controlInput
-            searchInputModifiers
-            searchControlAttrs
-            searchInputAttrs
-            []
+    controlInput
+        { controlInputModifiers
+            | size = Large
+            , iconRight = Just ( Large, [], Html.i [ class "fas fa-search" ] [] )
+        }
+        []
+        [ placeholder "Zip code"
+        , type_ "search"
+        ]
+        []
 
 
 searchForm : Html msg
 searchForm =
-    form []
+    Html.form []
         [ searchInput ]
 
 
@@ -98,7 +70,7 @@ appContainer =
 
 view : Model -> Html msg
 view model =
-    main_ []
+    Html.main_ []
         [ marketsHero
         , appContainer
         ]
