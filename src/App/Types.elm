@@ -1,15 +1,16 @@
 module App.Types exposing (..)
 
 
-type alias TabIndex =
-    Int
+type ActiveResultsTab
+    = ResultsTable
+    | ResultsMap
 
 
 type alias Model =
     { zip : String
-    , activeTab : TabIndex
+    , activeTab : ActiveResultsTab
     }
 
 
 type Msg
-    = ChangeTab TabIndex
+    = ChangeTab ActiveResultsTab
