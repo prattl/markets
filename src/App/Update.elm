@@ -8,3 +8,6 @@ update msg model =
     case msg of
         ChangeTab newTab ->
             { model | activeTab = newTab }
+
+        ChangeZip newZip ->
+            { model | zipCode = newZip }

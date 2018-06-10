@@ -1,5 +1,6 @@
 module Forms.ZipSearchForm exposing (zipSearchForm)
 
+import App.Types exposing (..)
 import Html exposing (Html)
 import Html.Attributes
     exposing
@@ -8,12 +9,13 @@ import Html.Attributes
         , style
         , type_
         )
+import Html.Events exposing (onInput)
 import Bulma.Modifiers exposing (..)
 import Bulma.Form exposing (..)
 import Bulma.Layout exposing (..)
 
 
-searchInput : Html msg
+searchInput : Control Msg
 searchInput =
     controlInput
         { controlInputModifiers
@@ -21,14 +23,15 @@ searchInput =
             , iconRight = Just ( Large, [], Html.i [ class "fas fa-search" ] [] )
         }
         []
-        [ placeholder "Zip code"
+        [ onInput ChangeZip
+        , placeholder "Zip code"
         , type_ "search"
         ]
         []
 
 
-zipSearchForm : Html msg
-zipSearchForm =
+zipSearchForm : Model -> Html Msg
+zipSearchForm model =
     section NotSpaced
         []
         [ container []

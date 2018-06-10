@@ -9,10 +9,11 @@ type ActiveResultsTab
 type alias Model =
     { activeTab : ActiveResultsTab
     , loading : Bool
-    , results : List String
+    , results : Maybe (List String)
     , zipCode : String
     }
 
 
 type Msg
     = ChangeTab ActiveResultsTab
+    | ChangeZip String

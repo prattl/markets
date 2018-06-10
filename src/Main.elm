@@ -21,22 +21,14 @@ main =
 
 model : Model
 model =
-    Model ResultsTable False [ "" ] ""
-
-
-
--- { activeTab = ResultsTable
--- , loading = False
--- , results = []
--- , zipCode = ""
--- }
+    Model ResultsTable False Nothing ""
 
 
 view : Model -> Html Msg
 view model =
     Html.main_ []
         [ appHeader
-        , zipSearchForm
+        , zipSearchForm model
         , container []
             [ searchResultsTabs model
             , searchResultsContents model
