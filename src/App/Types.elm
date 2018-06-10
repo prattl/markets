@@ -7,8 +7,10 @@ type ActiveResultsTab
 
 
 type alias Model =
-    { zip : String
-    , activeTab : ActiveResultsTab
+    { activeTab : ActiveResultsTab
+    , loading : Bool
+    , results : List String
+    , zipCode : String
     }
 
 

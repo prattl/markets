@@ -38,12 +38,12 @@ tabOptions =
 
 
 renderTab : ActiveResultsTab -> (TabOption -> Tab Msg)
-renderTab activeTab tabOption =
+renderTab activeTab { tabContent, node } =
     tab
-        (activeTab == tabOption.tabContent)
-        [ onClick <| ChangeTab tabOption.tabContent ]
+        (activeTab == tabContent)
+        [ onClick <| ChangeTab tabContent ]
         []
-        [ tabOption.node ]
+        [ node ]
 
 
 renderTabs : Model -> List (Tab Msg)

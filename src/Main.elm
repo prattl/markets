@@ -13,10 +13,23 @@ import Views.SearchResults.Tabs exposing (searchResultsTabs)
 main : Program Never Model Msg
 main =
     Html.beginnerProgram
-        { model = { zip = "", activeTab = ResultsTable }
+        { model = model
         , view = view
         , update = update
         }
+
+
+model : Model
+model =
+    Model ResultsTable False [ "" ] ""
+
+
+
+-- { activeTab = ResultsTable
+-- , loading = False
+-- , results = []
+-- , zipCode = ""
+-- }
 
 
 view : Model -> Html Msg
