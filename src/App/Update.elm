@@ -29,20 +29,20 @@ getFarmersMarketsByZip zipCode =
         Http.send ReceiveSearchResults request
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChangeTab newTab ->
-            { model | activeTab = newTab }
+            ( { model | activeTab = newTab }, Cmd.none )
 
         ChangeZip newZip ->
-            { model | zipCode = newZip }
+            ( { model | zipCode = newZip }, Cmd.none )
 
         SubmitSearch ->
-            { model | loading = True }
+            ( { model | loading = True }, getFarmersMarketsByZip model.zipCode )
 
         ReceiveSearchResults (Ok results) ->
-            { model | loading = False, results = Just results }
+            ( { model | loading = False, results = Just results }, Cmd.none )
 
         ReceiveSearchResults (Err _) ->
-            { model | loading = False, results = Just [] }
+            ( { model | loading = False, results = Just [] }, Cmd.none )

@@ -12,9 +12,10 @@ import Views.SearchResults.Tabs exposing (searchResultsTabs)
 
 main : Program Never Model Msg
 main =
-    Html.beginnerProgram
-        { model = model
+    Html.program
+        { init = init
         , view = view
+        , subscriptions = subscriptions
         , update = update
         }
 
@@ -22,6 +23,16 @@ main =
 model : Model
 model =
     Model ResultsTable False Nothing ""
+
+
+init : ( Model, Cmd Msg )
+init =
+    ( model, Cmd.none )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
 
 
 view : Model -> Html Msg
