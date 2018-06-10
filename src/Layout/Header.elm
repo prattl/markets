@@ -1,37 +1,39 @@
-module Layout.Header exposing (..)
+module Layout.Header exposing (appHeader)
 
-import Html
+import Html exposing (Html)
+import Html.Attributes
     exposing
-        ( Html
-        , Attribute
-        , article
-        , button
-        , div
-        , footer
-        , header
-        , h1
-        , main_
-        , section
-        , text
+        ( class
+        , placeholder
+        , style
+        , type_
         )
-import Html.Attributes exposing (..)
+import Bulma.Modifiers exposing (..)
+import Bulma.Elements exposing (..)
+import Bulma.Layout exposing (..)
 
 
-headerStyle : Attribute msg
-headerStyle =
-    style
-        [ ( "border-bottom", "2px solid #DDD" )
-        , ( "padding", "0.75em" )
-        ]
-
-
-navHeader : Html msg
-navHeader =
-    header [ headerStyle ]
-        [ h1
-            [ style
-                [ ( "margin", "0" )
+marketsHero : Html msg
+marketsHero =
+    hero { heroModifiers | size = Small, color = Primary }
+        []
+        [ heroBody []
+            [ container []
+                [ title H1 [] [ Html.text "Farmer's Market Locator" ]
+                , subtitle H2
+                    []
+                    [ Html.span []
+                        [ Html.text "Find a Farmer's Market Near You "
+                        , icon Medium
+                            [ class "has-text-warning" ]
+                            [ Html.i [ class "fas fa-map-marker-alt" ] [] ]
+                        ]
+                    ]
                 ]
             ]
-            [ text "Find a Farmer's Market" ]
         ]
+
+
+appHeader : Html msg
+appHeader =
+    marketsHero
