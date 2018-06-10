@@ -8,10 +8,20 @@ type ActiveResultsTab
     | ResultsMap
 
 
+type alias FarmersMarket =
+    { id : String
+    , marketname : String
+    }
+
+
+type alias ApiResponse =
+    { result : List FarmersMarket }
+
+
 type alias Model =
     { activeTab : ActiveResultsTab
     , loading : Bool
-    , results : Maybe String
+    , results : Maybe (List FarmersMarket)
     , zipCode : String
     }
 
@@ -20,4 +30,4 @@ type Msg
     = ChangeTab ActiveResultsTab
     | ChangeZip String
     | SubmitSearch
-    | ReceiveSearchResults (Result Http.Error String)
+    | ReceiveSearchResults (Result Http.Error (List FarmersMarket))
