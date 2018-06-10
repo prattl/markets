@@ -9,25 +9,57 @@ import Html.Attributes
         , style
         , type_
         )
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onSubmit)
+import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import Bulma.Form exposing (..)
 import Bulma.Layout exposing (..)
 
 
-searchInput : Control Msg
-searchInput =
-    controlInput
-        { controlInputModifiers
-            | size = Large
-            , iconRight = Just ( Large, [], Html.i [ class "fas fa-search" ] [] )
-        }
+baseModifiers : ButtonModifiers msg
+baseModifiers =
+    { buttonModifiers
+        | size = Large
+        , color = Info
+    }
+
+
+searchButtonModifiers : Model -> ButtonModifiers msg
+searchButtonModifiers { loading } =
+    if loading then
+        { baseModifiers | state = Loading }
+    else
+        baseModifiers
+
+
+searchButton : Model -> Control Msg
+searchButton model =
+    controlButton
+        (searchButtonModifiers model)
         []
-        [ onInput ChangeZip
-        , placeholder "Zip code"
-        , type_ "search"
+        [ type_ "submit" ]
+        [ icon Medium
+            []
+            [ Html.i [ class "fas fa-search" ] [] ]
+        , Html.text " "
+        , Html.text "Search"
         ]
+
+
+searchInput : Model -> Control Msg
+searchInput model =
+    connectedFields Centered
         []
+        [ controlInput
+            { controlInputModifiers | size = Large }
+            []
+            [ onInput ChangeZip
+            , placeholder "Zip code"
+            , type_ "search"
+            ]
+            []
+        , searchButton model
+        ]
 
 
 zipSearchForm : Model -> Html Msg
@@ -35,7 +67,8 @@ zipSearchForm model =
     section NotSpaced
         []
         [ container []
-            [ Html.form []
-                [ searchInput ]
+            [ Html.form
+                [ onSubmit SubmitSearch ]
+                [ searchInput model ]
             ]
         ]

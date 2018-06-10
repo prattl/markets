@@ -11,3 +11,12 @@ update msg model =
 
         ChangeZip newZip ->
             { model | zipCode = newZip }
+
+        SubmitSearch ->
+            { model | loading = True }
+
+        ReceiveSearchResults (Ok results) ->
+            { model | loading = False, results = Just results }
+
+        ReceiveSearchResults (Err _) ->
+            { model | loading = False, results = Just "" }
