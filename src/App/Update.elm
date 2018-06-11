@@ -5,14 +5,14 @@ import Http
 import Json.Decode exposing (..)
 
 
-decodeFarmersMarket : Decoder FarmersMarket
+decodeFarmersMarket : Decoder FarmersMarketResponse
 decodeFarmersMarket =
-    map2 FarmersMarket
+    map2 FarmersMarketResponse
         (field "id" string)
         (field "marketname" string)
 
 
-decodeResponse : Decoder (List FarmersMarket)
+decodeResponse : Decoder ResponseResultsList
 decodeResponse =
     field "results" (list decodeFarmersMarket)
 
@@ -29,6 +29,32 @@ getFarmersMarketsByZip zipCode =
         Http.send ReceiveSearchResults request
 
 
+initFarmersMarket : String -> String -> FarmersMarket
+initFarmersMarket id_ marketname =
+    FarmersMarket
+        id_
+        (let
+            distance =
+                List.head (String.split " " marketname)
+         in
+            case distance of
+                Just dist ->
+                    dist
+
+                Nothing ->
+                    ""
+        )
+        (String.join " " <|
+            List.drop 1 <|
+                String.split " " marketname
+        )
+
+
+responseToFarmersMarket : FarmersMarketResponse -> FarmersMarket
+responseToFarmersMarket response =
+    initFarmersMarket response.id response.name
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -42,7 +68,14 @@ update msg model =
             ( { model | loading = True }, getFarmersMarketsByZip model.zipCode )
 
         ReceiveSearchResults (Ok results) ->
-            ( { model | loading = False, results = Just results }, Cmd.none )
+            ( { model
+                | loading = False
+                , results =
+                    Just
+                        (List.map responseToFarmersMarket results)
+              }
+            , Cmd.none
+            )
 
         ReceiveSearchResults (Err _) ->
             ( { model | loading = False, results = Just [] }, Cmd.none )

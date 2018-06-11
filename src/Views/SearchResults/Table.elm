@@ -10,8 +10,8 @@ searchResultsRow farmersMarket =
     tableRow
         False
         []
-        [ tableCell [] [ Html.text farmersMarket.id ]
-        , tableCell [] [ Html.text farmersMarket.marketname ]
+        [ tableCell [] [ Html.text farmersMarket.distance ]
+        , tableCell [] [ Html.text farmersMarket.name ]
         ]
 
 
@@ -37,7 +37,7 @@ searchResultsTable model =
             [ tableRow
                 False
                 []
-                [ tableCellHead [] [ Html.text "ID" ]
+                [ tableCellHead [] [ Html.text "Distance (mi)" ]
                 , tableCellHead [] [ Html.text "Name" ]
                 ]
             ]
