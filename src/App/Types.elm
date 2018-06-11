@@ -31,6 +31,7 @@ type alias ResultsList =
 
 type alias Model =
     { activeTab : ActiveResultsTab
+    , error : Bool
     , loading : Bool
     , results : Maybe ResultsList
     , zipCode : String

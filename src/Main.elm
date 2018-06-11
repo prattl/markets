@@ -22,7 +22,7 @@ main =
 
 model : Model
 model =
-    Model ResultsTable False Nothing ""
+    Model ResultsTable False False Nothing ""
 
 
 init : ( Model, Cmd Msg )

@@ -55,6 +55,20 @@ responseToFarmersMarket response =
     initFarmersMarket response.id response.name
 
 
+calculateError : ResultsList -> Bool
+calculateError results =
+    let
+        result =
+            List.head results
+    in
+        case result of
+            Just r ->
+                r.id == "Error"
+
+            Nothing ->
+                False
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -68,12 +82,15 @@ update msg model =
             ( { model | loading = True }, getFarmersMarketsByZip model.zipCode )
 
         ReceiveSearchResults (Ok results) ->
-            ( { model
-                | loading = False
-                , results =
-                    Just
-                        (List.map responseToFarmersMarket results)
-              }
+            ( let
+                resultsList =
+                    List.map responseToFarmersMarket results
+              in
+                { model
+                    | error = calculateError resultsList
+                    , loading = False
+                    , results = Just resultsList
+                }
             , Cmd.none
             )
 
