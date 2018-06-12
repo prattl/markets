@@ -10,11 +10,30 @@ import Views.SearchResults.Map exposing (searchResultsMap)
 import Views.SearchResults.Table exposing (searchResultsTable)
 
 
+numSearchResults : Model -> Html Msg
+numSearchResults model =
+    case model.results of
+        Just results ->
+            Html.div
+                [ style [ ( "margin-bottom", "1rem" ) ] ]
+                [ Html.text <|
+                    toString <|
+                        List.length results
+                , Html.text " results found"
+                ]
+
+        Nothing ->
+            Html.text ""
+
+
 renderTabContents : Model -> Html Msg
 renderTabContents model =
     case model.activeTab of
         ResultsTable ->
-            searchResultsTable model
+            Html.div []
+                [ numSearchResults model
+                , searchResultsTable model
+                ]
 
         ResultsMap ->
             searchResultsMap model

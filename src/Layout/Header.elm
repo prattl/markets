@@ -19,9 +19,11 @@ marketsHero =
         []
         [ heroBody []
             [ container []
-                [ title H1 [] [ Html.text "Farmer's Market Locator" ]
+                [ title H1
+                    [ class "is-size-3-mobile" ]
+                    [ Html.text "Farmer's Market Locator" ]
                 , subtitle H2
-                    []
+                    [ class "is-size-4-mobile" ]
                     [ Html.span []
                         [ Html.text "Find a Farmer's Market Near You "
                         , icon Medium

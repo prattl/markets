@@ -40,7 +40,8 @@ view model =
     Html.main_ []
         [ appHeader
         , zipSearchForm model
-        , container []
+        , section NotSpaced
+            []
             [ searchResultsTabs model
             , searchResultsContents model
             ]
