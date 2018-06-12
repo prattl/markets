@@ -42,7 +42,9 @@ view model =
         , zipSearchForm model
         , section NotSpaced
             []
-            [ searchResultsTabs model
-            , searchResultsContents model
+            [ container []
+                [ searchResultsTabs model
+                , searchResultsContents model
+                ]
             ]
         ]
