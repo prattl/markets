@@ -18,10 +18,20 @@ type alias ResponseResultsList =
     List FarmersMarketResponse
 
 
+type alias FarmersMarketDetails =
+    { address : String
+    , googleLink : String
+    , product : String
+    , schedule : String
+    }
+
+
 type alias FarmersMarket =
     { id : String
     , distance : String
     , name : String
+    , details : Maybe FarmersMarketDetails
+    , expanded : Bool
     }
 
 
@@ -43,3 +53,5 @@ type Msg
     | ChangeZip String
     | SubmitSearch
     | ReceiveSearchResults (Result Http.Error ResponseResultsList)
+    | SubmitMoreInfo FarmersMarket
+    | ReceiveMoreInfo (Result Http.Error FarmersMarketDetails)

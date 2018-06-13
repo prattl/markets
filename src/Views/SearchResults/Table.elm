@@ -4,18 +4,41 @@ import App.Types exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import Html exposing (Html)
-import Html.Attributes exposing (class, href)
+import Html.Attributes exposing (class, colspan, href)
+import Html.Events exposing (onClick)
 
 
-searchResultsRow : FarmersMarket -> TableRow Msg
-searchResultsRow farmersMarket =
-    tableRow
+farmersMarketDetailsRow : FarmersMarket -> TableRow Msg
+farmersMarketDetailsRow farmersMarket =
+    case farmersMarket.expanded of
+        True ->
+            tableRow
+                False
+                []
+                [ case farmersMarket.details of
+                    Just details ->
+                        tableCell [ colspan 3 ] [ Html.text "Details" ]
+
+                    Nothing ->
+                        icon Small
+                            []
+                            [ Html.i [ class "fas fa-sync fa-spin" ] [] ]
+                ]
+
+        False ->
+            Html.text ""
+
+
+searchResultsRow : Model -> FarmersMarket -> List (TableRow Msg)
+searchResultsRow model farmersMarket =
+    [ tableRow
         False
         []
         [ tableCell [] [ Html.text farmersMarket.distance ]
         , tableCell [] [ Html.text farmersMarket.name ]
         , tableCell []
-            [ Html.a [ href "" ]
+            [ Html.a
+                [ onClick <| SubmitMoreInfo farmersMarket ]
                 [ icon Small
                     []
                     [ Html.i [ class "fas fa-caret-right" ] [] ]
@@ -23,14 +46,16 @@ searchResultsRow farmersMarket =
                 ]
             ]
         ]
+    , farmersMarketDetailsRow farmersMarket
+    ]
 
 
-searchResultsBody : Maybe (List FarmersMarket) -> TablePartition Msg
-searchResultsBody results =
+searchResultsBody : Model -> TablePartition Msg
+searchResultsBody model =
     tableBody [] <|
-        case results of
+        case model.results of
             Just results ->
-                (List.map searchResultsRow results)
+                List.foldr (++) [] <| List.map (searchResultsRow model) results
 
             Nothing ->
                 []
@@ -51,5 +76,5 @@ searchResultsTable model =
                 , tableCellHead [] []
                 ]
             ]
-        , searchResultsBody model.results
+        , searchResultsBody model
         ]

@@ -5,6 +5,19 @@ import Http
 import Json.Decode exposing (..)
 
 
+updateFarmersMarket : FarmersMarket -> List FarmersMarket -> List FarmersMarket
+updateFarmersMarket farmersMarket list =
+    let
+        toggle : FarmersMarket -> FarmersMarket
+        toggle result =
+            if farmersMarket.id == result.id then
+                { result | expanded = True }
+            else
+                { result | expanded = False }
+    in
+        List.map toggle list
+
+
 decodeFarmersMarket : Decoder FarmersMarketResponse
 decodeFarmersMarket =
     map2 FarmersMarketResponse
@@ -31,23 +44,30 @@ getFarmersMarketsByZip zipCode =
 
 initFarmersMarket : String -> String -> FarmersMarket
 initFarmersMarket id_ marketname =
-    FarmersMarket
-        id_
-        (let
-            distance =
-                List.head (String.split " " marketname)
-         in
-            case distance of
-                Just dist ->
-                    dist
+    let
+        distance =
+            let
+                dist_ =
+                    List.head (String.split " " marketname)
+            in
+                case dist_ of
+                    Just dist_ ->
+                        dist_
 
-                Nothing ->
-                    ""
-        )
-        (String.join " " <|
-            List.drop 1 <|
-                String.split " " marketname
-        )
+                    Nothing ->
+                        ""
+
+        name =
+            String.join " " <|
+                List.drop 1 <|
+                    String.split " " marketname
+    in
+        FarmersMarket
+            id_
+            distance
+            name
+            Nothing
+            False
 
 
 responseToFarmersMarket : FarmersMarketResponse -> FarmersMarket
@@ -96,3 +116,21 @@ update msg model =
 
         ReceiveSearchResults (Err _) ->
             ( { model | loading = False, results = Just [] }, Cmd.none )
+
+        SubmitMoreInfo farmersMarket ->
+            let
+                updatedResults =
+                    case model.results of
+                        Just results ->
+                            Just <| updateFarmersMarket farmersMarket results
+
+                        Nothing ->
+                            Nothing
+            in
+                ( { model | results = updatedResults }, Cmd.none )
+
+        ReceiveMoreInfo (Ok results) ->
+            ( model, Cmd.none )
+
+        ReceiveMoreInfo (Err _) ->
+            ( model, Cmd.none )
