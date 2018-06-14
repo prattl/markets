@@ -11,7 +11,7 @@ updateFarmersMarket farmersMarket list =
         toggle : FarmersMarket -> FarmersMarket
         toggle result =
             if farmersMarket.id == result.id then
-                { result | expanded = True }
+                { result | expanded = not result.expanded }
             else
                 { result | expanded = False }
     in
@@ -25,9 +25,23 @@ decodeFarmersMarket =
         (field "marketname" string)
 
 
-decodeResponse : Decoder ResponseResultsList
-decodeResponse =
+decodeDetails : Decoder FarmersMarketDetails
+decodeDetails =
+    map4 FarmersMarketDetails
+        (field "Address" string)
+        (field "GoogleLink" string)
+        (field "Products" string)
+        (field "Schedule" string)
+
+
+decodeFarmersMarketResponse : Decoder ResponseResultsList
+decodeFarmersMarketResponse =
     field "results" (list decodeFarmersMarket)
+
+
+decodeDetailsResponse : Decoder FarmersMarketDetails
+decodeDetailsResponse =
+    field "marketdetails" decodeDetails
 
 
 getFarmersMarketsByZip : String -> Cmd Msg
@@ -37,9 +51,26 @@ getFarmersMarketsByZip zipCode =
             "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" ++ zipCode
 
         request =
-            Http.get url decodeResponse
+            Http.get url decodeFarmersMarketResponse
     in
         Http.send ReceiveSearchResults request
+
+
+getFarmersMarketDetailsIfNeeded : FarmersMarket -> Cmd Msg
+getFarmersMarketDetailsIfNeeded farmersMarket =
+    let
+        url =
+            "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" ++ farmersMarket.id
+
+        request =
+            Http.get url decodeDetailsResponse
+    in
+        case farmersMarket.details of
+            Just farmersMarketDetails ->
+                Cmd.none
+
+            Nothing ->
+                Http.send ReceiveDetails request
 
 
 initFarmersMarket : String -> String -> FarmersMarket
@@ -117,7 +148,7 @@ update msg model =
         ReceiveSearchResults (Err _) ->
             ( { model | loading = False, results = Just [] }, Cmd.none )
 
-        SubmitMoreInfo farmersMarket ->
+        OpenMoreInfo farmersMarket ->
             let
                 updatedResults =
                     case model.results of
@@ -127,10 +158,10 @@ update msg model =
                         Nothing ->
                             Nothing
             in
-                ( { model | results = updatedResults }, Cmd.none )
+                ( { model | results = updatedResults }, getFarmersMarketDetailsIfNeeded farmersMarket )
 
-        ReceiveMoreInfo (Ok results) ->
+        ReceiveDetails (Ok results) ->
             ( model, Cmd.none )
 
-        ReceiveMoreInfo (Err _) ->
+        ReceiveDetails (Err _) ->
             ( model, Cmd.none )

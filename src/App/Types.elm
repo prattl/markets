@@ -30,6 +30,8 @@ type alias FarmersMarket =
     { id : String
     , distance : String
     , name : String
+
+    -- Maybe indicates loading here
     , details : Maybe FarmersMarketDetails
     , expanded : Bool
     }
@@ -53,5 +55,5 @@ type Msg
     | ChangeZip String
     | SubmitSearch
     | ReceiveSearchResults (Result Http.Error ResponseResultsList)
-    | SubmitMoreInfo FarmersMarket
-    | ReceiveMoreInfo (Result Http.Error FarmersMarketDetails)
+    | OpenMoreInfo FarmersMarket
+    | ReceiveDetails (Result Http.Error FarmersMarketDetails)

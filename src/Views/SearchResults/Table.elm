@@ -4,8 +4,35 @@ import App.Types exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import Html exposing (Html)
-import Html.Attributes exposing (class, colspan, href)
+import Html.Attributes
+    exposing
+        ( class
+        , colspan
+        , href
+        , style
+        )
 import Html.Events exposing (onClick)
+
+
+moreInfoButton : FarmersMarket -> Html Msg
+moreInfoButton farmersMarket =
+    let
+        iconClass : String
+        iconClass =
+            case farmersMarket.expanded of
+                True ->
+                    "fas fa-caret-down"
+
+                False ->
+                    "fas fa-caret-right"
+    in
+        Html.a
+            [ onClick <| OpenMoreInfo farmersMarket ]
+            [ icon Small
+                []
+                [ Html.i [ class iconClass ] [] ]
+            , Html.text " More info"
+            ]
 
 
 farmersMarketDetailsRow : FarmersMarket -> TableRow Msg
@@ -20,9 +47,14 @@ farmersMarketDetailsRow farmersMarket =
                         tableCell [ colspan 3 ] [ Html.text "Details" ]
 
                     Nothing ->
-                        icon Small
-                            []
-                            [ Html.i [ class "fas fa-sync fa-spin" ] [] ]
+                        tableCell
+                            [ class "has-text-centered"
+                            , colspan 3
+                            ]
+                            [ icon Medium
+                                [ style [ ( "margin", "2rem 0" ) ] ]
+                                [ Html.i [ class "fas fa-sync fa-spin fa-lg" ] [] ]
+                            ]
                 ]
 
         False ->
@@ -36,15 +68,7 @@ searchResultsRow model farmersMarket =
         []
         [ tableCell [] [ Html.text farmersMarket.distance ]
         , tableCell [] [ Html.text farmersMarket.name ]
-        , tableCell []
-            [ Html.a
-                [ onClick <| SubmitMoreInfo farmersMarket ]
-                [ icon Small
-                    []
-                    [ Html.i [ class "fas fa-caret-right" ] [] ]
-                , Html.text " More info"
-                ]
-            ]
+        , tableCell [] [ moreInfoButton farmersMarket ]
         ]
     , farmersMarketDetailsRow farmersMarket
     ]
