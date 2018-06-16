@@ -26,8 +26,12 @@ type alias FarmersMarketDetails =
     }
 
 
+type alias FarmersMarketID =
+    String
+
+
 type alias FarmersMarket =
-    { id : String
+    { id : FarmersMarketID
     , distance : String
     , name : String
 
@@ -56,4 +60,4 @@ type Msg
     | SubmitSearch
     | ReceiveSearchResults (Result Http.Error ResponseResultsList)
     | OpenMoreInfo FarmersMarket
-    | ReceiveDetails (Result Http.Error FarmersMarketDetails)
+    | ReceiveDetails FarmersMarketID (Result Http.Error FarmersMarketDetails)

@@ -5,8 +5,21 @@ import Http
 import Json.Decode exposing (..)
 
 
-updateFarmersMarket : FarmersMarket -> List FarmersMarket -> List FarmersMarket
-updateFarmersMarket farmersMarket list =
+updateFarmersMarketDetails : FarmersMarketID -> FarmersMarketDetails -> List FarmersMarket -> List FarmersMarket
+updateFarmersMarketDetails farmersMarketIdToUpdate details list =
+    let
+        addDetails : FarmersMarket -> FarmersMarket
+        addDetails farmersMarket =
+            if farmersMarketIdToUpdate == farmersMarket.id then
+                { farmersMarket | details = Just details }
+            else
+                farmersMarket
+    in
+        List.map addDetails list
+
+
+toggleFarmersMarketExpanded : FarmersMarket -> List FarmersMarket -> List FarmersMarket
+toggleFarmersMarketExpanded farmersMarket list =
     let
         toggle : FarmersMarket -> FarmersMarket
         toggle result =
@@ -70,7 +83,7 @@ getFarmersMarketDetailsIfNeeded farmersMarket =
                 Cmd.none
 
             Nothing ->
-                Http.send ReceiveDetails request
+                Http.send (ReceiveDetails farmersMarket.id) request
 
 
 initFarmersMarket : String -> String -> FarmersMarket
@@ -153,15 +166,24 @@ update msg model =
                 updatedResults =
                     case model.results of
                         Just results ->
-                            Just <| updateFarmersMarket farmersMarket results
+                            Just <| toggleFarmersMarketExpanded farmersMarket results
 
                         Nothing ->
                             Nothing
             in
                 ( { model | results = updatedResults }, getFarmersMarketDetailsIfNeeded farmersMarket )
 
-        ReceiveDetails (Ok results) ->
-            ( model, Cmd.none )
+        ReceiveDetails id_ (Ok detailResults) ->
+            let
+                updatedModel =
+                    case model.results of
+                        Just results ->
+                            { model | results = Just <| updateFarmersMarketDetails id_ detailResults results }
 
-        ReceiveDetails (Err _) ->
+                        Nothing ->
+                            model
+            in
+                ( updatedModel, Cmd.none )
+
+        ReceiveDetails id_ (Err _) ->
             ( model, Cmd.none )
