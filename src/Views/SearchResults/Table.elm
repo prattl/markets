@@ -28,20 +28,34 @@ googleLink to =
         ]
 
 
+detailTitle : String -> Html Msg
+detailTitle name =
+    Html.span [ class "has-text-weight-bold" ]
+        [ Html.text name ]
+
+
 farmersMarketDetails : FarmersMarketDetails -> Html Msg
 farmersMarketDetails details =
-    Html.div [ class "content" ]
-        [ Html.ul []
-            [ Html.li []
-                [ Html.text details.address
-                , Html.text " ("
-                , googleLink details.googleLink
-                , Html.text ")"
+    Html.div [ class "columns is-desktop" ]
+        [ Html.div [ class "column is-three-fifths is-offset-one-fifth" ]
+            [ Html.div [ class "content" ]
+                [ Html.ul []
+                    [ Html.li []
+                        [ Html.text details.address
+                        , Html.text " ("
+                        , googleLink details.googleLink
+                        , Html.text ")"
+                        ]
+                    , Html.li []
+                        [ detailTitle "Products: "
+                        , Html.text details.product
+                        ]
+                    , Html.li []
+                        [ detailTitle "Schedule: "
+                        , Html.text details.schedule
+                        ]
+                    ]
                 ]
-            , Html.li []
-                [ Html.text <| "Products: " ++ details.product
-                ]
-            , Html.li [] [ Html.text <| "Schedule: " ++ details.schedule ]
             ]
         ]
 
