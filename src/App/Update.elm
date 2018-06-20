@@ -26,7 +26,7 @@ toggleFarmersMarketExpanded farmersMarket list =
             if farmersMarket.id == result.id then
                 { result | expanded = not result.expanded }
             else
-                { result | expanded = False }
+                result
     in
         List.map toggle list
 
