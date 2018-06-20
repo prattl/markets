@@ -10,8 +10,40 @@ import Html.Attributes
         , colspan
         , href
         , style
+        , target
         )
 import Html.Events exposing (onClick)
+
+
+googleLink : String -> Html Msg
+googleLink to =
+    Html.a
+        [ href to
+        , target "_blank"
+        ]
+        [ Html.text "Google Maps link "
+        , icon Small
+            []
+            [ Html.i [ class "fas fa-external-link-alt" ] [] ]
+        ]
+
+
+farmersMarketDetails : FarmersMarketDetails -> Html Msg
+farmersMarketDetails details =
+    Html.div [ class "content" ]
+        [ Html.ul []
+            [ Html.li []
+                [ Html.text details.address
+                , Html.text " ("
+                , googleLink details.googleLink
+                , Html.text ")"
+                ]
+            , Html.li []
+                [ Html.text <| "Products: " ++ details.product
+                ]
+            , Html.li [] [ Html.text <| "Schedule: " ++ details.schedule ]
+            ]
+        ]
 
 
 moreInfoButton : FarmersMarket -> Html Msg
@@ -44,7 +76,7 @@ farmersMarketDetailsRow farmersMarket =
                 []
                 [ case farmersMarket.details of
                     Just details ->
-                        tableCell [ colspan 3 ] [ Html.text "Details" ]
+                        tableCell [ colspan 3 ] [ farmersMarketDetails details ]
 
                     Nothing ->
                         tableCell
