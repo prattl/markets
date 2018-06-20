@@ -28,12 +28,13 @@ tabOptions =
             []
         )
         ResultsTable
-    , TabOption
-        (Html.i
-            [ class "fas fa-map-marker-alt" ]
-            []
-        )
-        ResultsMap
+
+    -- , TabOption
+    --     (Html.i
+    --         [ class "fas fa-map-marker-alt" ]
+    --         []
+    --     )
+    --     ResultsMap
     ]
 
 
